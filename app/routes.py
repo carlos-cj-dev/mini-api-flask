@@ -1,13 +1,19 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, User
 from sqlalchemy import text
-from app.service import create_user_service, update_user_service, delete_user_service
+from app.service import list_users as all_users, create_user_service, update_user_service, delete_user_service
 
 urls = Blueprint('url', __name__)
 
 @urls.route('/api')
 def welcome():
     return "Welcome to the Flask Application!"
+
+
+@urls.get("/api/users")
+def list_users():
+    users = all_users()
+    return jsonify(users),200
 
 
 @urls.post("/api/users")

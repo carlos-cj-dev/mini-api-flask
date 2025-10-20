@@ -2,6 +2,10 @@ from app.models import db, User
 from sqlalchemy import text
 
 
+
+def list_users():
+    users = db.session.execute(text("SELECT * FROM user")).mappings()
+    return [dict(row) for row in users]
 def create_user_service(name, email):
     if not email or not name:
         return {"error": "Missing 'email' or 'name'"}, 400
@@ -34,10 +38,10 @@ def create_user_service(name, email):
 
 def update_user_service(user_id, name, email):
     if not user_id:
-        return {"error": "Id do usuário é obrigatório"}, 400
+        return {"error": "id required"}, 400
     
     if not name and not email:
-        return {"error": "Pelo menos o nome ou email deve ser fornecido"}, 400
+        return {"error": "empty data"}, 400
     
     user = db.session.execute(
         text("SELECT * FROM user WHERE id = :id"),
@@ -45,7 +49,7 @@ def update_user_service(user_id, name, email):
     ).fetchone()
     
     if not user:
-        return {"error": "Usuário não encontrado"}, 404
+        return {"error": "user not found"}, 400
     
     if email:
         existing_email = db.session.execute(
@@ -66,7 +70,7 @@ def update_user_service(user_id, name, email):
     db.session.commit()
     
     return {
-        "message": "Usuário atualizado com sucesso",
+        "message": "user updated successfully",
         "user": {
             "id": user_obj.id,
             "name": user_obj.name,
