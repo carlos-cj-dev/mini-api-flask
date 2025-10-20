@@ -11,7 +11,6 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 
 
-
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]= mapped_column(String)
