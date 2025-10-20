@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, User
 from sqlalchemy import text
-from app.service import create_user_service, update_user_service
+from app.service import create_user_service, update_user_service, delete_user_service
 
 urls = Blueprint('url', __name__)
 
@@ -26,6 +26,11 @@ def update_user(user_id):
     email = data.get("email")
     
     result, status_code = update_user_service(user_id, name, email)
+    return jsonify(result), status_code
+
+@urls.delete("/api/users/<int:user_id>")
+def delete_user(user_id):
+    result, status_code = delete_user_service(user_id)
     return jsonify(result), status_code
 
 

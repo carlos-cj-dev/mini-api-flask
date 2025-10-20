@@ -74,3 +74,25 @@ def update_user_service(user_id, name, email):
         }
     }, 200
 
+
+def delete_user_service(user_id):
+    if not user_id:
+        return {"error": "User ID is required"}, 400
+    
+    user = db.session.execute(
+        text("SELECT * FROM user WHERE id = :id"),
+        {"id": user_id}
+    ).fetchone()
+    
+    if not user:
+        return {"error": "User not found"}, 404
+    
+    user_obj = db.session.get(User, user_id)
+    
+    db.session.delete(user_obj)
+    db.session.commit()
+    
+    return {
+        "message": "User deleted successfully"
+    }, 200
+
